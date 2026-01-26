@@ -1,0 +1,89 @@
+<div class="todo-container">
+  <header class="todo-header">
+    <h1>Todo App</h1>
+    <p class="subtitle">Angular 實戰專案 - 待辦事項應用</p>
+  </header>
+
+  <div class="todo-input-section">
+    <div class="input-group">
+      <button class="add-btn">
+        搜尋
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- 統計資訊 -->
+  <!-- ============================================ -->
+<!--  <div class="stats-bar">-->
+<!--    <div class="stat-item">-->
+<!--      <span class="stat-number">{{ stats().total }}</span>-->
+<!--      <span class="stat-label">全部</span>-->
+<!--    </div>-->
+<!--    <div class="stat-item">-->
+<!--      <span class="stat-number active">{{ stats().active }}</span>-->
+<!--      <span class="stat-label">進行中</span>-->
+<!--    </div>-->
+<!--    <div class="stat-item">-->
+<!--      <span class="stat-number completed">{{ stats().completed }}</span>-->
+<!--      <span class="stat-label">已完成</span>-->
+<!--    </div>-->
+<!--    <div class="progress-bar">-->
+<!--      @if (stats().total > 0) {-->
+<!--        <div-->
+<!--          class="progress-fill"-->
+<!--          [style.width.%]="(stats().completed / stats().total) * 100"-->
+<!--        ></div>-->
+<!--      }-->
+<!--    </div>-->
+<!--  </div>-->
+
+  <!-- ============================================ -->
+  <!-- 篩選按鈕 -->
+  <!-- ============================================ -->
+<!--  <div class="filter-bar">-->
+<!--    <button-->
+<!--      class="filter-btn"-->
+<!--      [class.active]="filter() === 'all'"-->
+<!--      (click)="setFilter('all')"-->
+<!--    >-->
+<!--      全部-->
+<!--    </button>-->
+<!--    <button-->
+<!--      class="filter-btn"-->
+<!--      [class.active]="filter() === 'active'"-->
+<!--      (click)="setFilter('active')"-->
+<!--    >-->
+<!--      進行中-->
+<!--    </button>-->
+<!--    <button-->
+<!--      class="filter-btn"-->
+<!--      [class.active]="filter() === 'completed'"-->
+<!--      (click)="setFilter('completed')"-->
+<!--    >-->
+<!--      已完成-->
+<!--    </button>-->
+
+<!--    @if (stats().total > 0) {-->
+<!--      <button-->
+<!--        class="toggle-all-btn"-->
+<!--        (click)="toggleAll()"-->
+<!--        [class.all-completed]="allCompleted()"-->
+<!--      >-->
+<!--        {{ allCompleted() ? '取消全選' : '全選' }}-->
+<!--      </button>-->
+<!--    }-->
+<!--  </div>-->
+
+  <!-- ============================================ -->
+  <!-- 待辦事項列表 -->
+  <!-- ============================================ -->
+
+
+  <!-- ============================================ -->
+  <!-- 使用說明 -->
+  <!-- ============================================ -->
+  <div class="help-text">
+    <p>💡 提示：雙擊待辦事項可進入編輯模式，按 Enter 儲存，按 Esc 取消</p>
+  </div>
+</div>

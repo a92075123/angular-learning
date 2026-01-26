@@ -1,0 +1,175 @@
+<div class="demo-container">
+  <h2>Angular 資料綁定示範</h2>
+
+  <!-- ============================================ -->
+  <!-- 1. 插值綁定 (Interpolation) -->
+  <!-- ============================================ -->
+  <section class="section">
+    <h3>1. 插值綁定 (Interpolation)</h3>
+    <p>插值綁定用於在模板中顯示元件的屬性值</p>
+
+    <div class="example">
+      <p><strong>標題：</strong>{{ title }}</p>
+      <p><strong>現在時間：</strong>{{ currentDate.toLocaleString() }}</p>
+      <p><strong>原價：</strong>NT$ {{ price }}</p>
+      <p><strong>折扣後：</strong>{{ formattedPrice }}</p>
+      <p><strong>運算式：</strong>5 + 3 = {{ 5 + 3 }}</p>
+      <p><strong>三元運算：</strong>{{ price > 1000 ? '高價' : '低價' }}</p>
+    </div>
+
+    <div class="code-hint">
+      <code>&#123;&#123; title &#125;&#125;</code> - 顯示元件屬性
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- 2. 屬性綁定 (Property Binding) -->
+  <!-- ============================================ -->
+  <section class="section">
+    <h3>2. 屬性綁定 [property]</h3>
+    <p>用於將元件屬性綁定到 HTML 元素的屬性</p>
+
+    <div class="example">
+      <!-- 圖片 src 綁定 -->
+      <img [src]="imageUrl" [alt]="imageAlt" width="200">
+
+      <!-- disabled 屬性綁定 -->
+      <p>
+        <button [disabled]="isButtonDisabled">
+          {{ isButtonDisabled ? '按鈕已停用' : '按鈕可點擊' }}
+        </button>
+        <button (click)="toggleButton()">切換停用狀態</button>
+      </p>
+
+      <!-- placeholder 綁定 -->
+      <input type="text" [placeholder]="inputPlaceholder">
+    </div>
+
+    <div class="code-hint">
+      <code>[src]="imageUrl"</code> - 綁定 src 屬性
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- 3. 事件綁定 (Event Binding) -->
+  <!-- ============================================ -->
+  <section class="section">
+    <h3>3. 事件綁定 (event)</h3>
+    <p>用於監聽 DOM 事件並觸發元件方法</p>
+
+    <div class="example">
+      <!-- click 事件 -->
+      <button (click)="handleClick()">點我顯示訊息</button>
+
+      <!-- 計數器範例 -->
+      <div class="counter-demo">
+        <button (click)="decrement()">-</button>
+        <span class="counter-value">{{ counter() }}</span>
+        <button (click)="increment()">+</button>
+        <span class="status">{{ counterStatus }}</span>
+      </div>
+      <p>雙倍值 (Computed Signal): {{ doubleCounter() }}</p>
+
+      <!-- input 事件 -->
+      <div>
+        <input
+          type="text"
+          (input)="handleInputChange($event)"
+          (keyup)="handleKeyup($event)"
+          placeholder="輸入後查看 console"
+        >
+        <small>（打開瀏覽器 Console 查看輸出）</small>
+      </div>
+    </div>
+
+    <div class="code-hint">
+      <code>(click)="handleClick()"</code> - 監聽點擊事件
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- 4. 雙向綁定 (Two-way Binding) -->
+  <!-- ============================================ -->
+  <section class="section">
+    <h3>4. 雙向綁定 [(ngModel)]</h3>
+    <p>資料同步更新：元件 ↔ 視圖</p>
+
+    <div class="example">
+      <!-- 文字輸入 -->
+      <div class="form-group">
+        <label>你的名字：</label>
+        <input type="text" [(ngModel)]="userName" placeholder="輸入姓名">
+        <p>Hello, {{ userName || '訪客' }}!</p>
+      </div>
+
+      <!-- 下拉選單 -->
+      <div class="form-group">
+        <label>選擇顏色：</label>
+        <select [(ngModel)]="selectedColor">
+          <option value="red">紅色</option>
+          <option value="green">綠色</option>
+          <option value="blue">藍色</option>
+        </select>
+        <span [style.color]="selectedColor" [style.font-weight]="'bold'">
+          這是 {{ selectedColor }} 的文字
+        </span>
+      </div>
+
+      <!-- 核取方塊 -->
+      <div class="form-group">
+        <label>
+          <input type="checkbox" [(ngModel)]="isChecked">
+          同意條款
+        </label>
+        <p>狀態：{{ isChecked ? '已勾選' : '未勾選' }}</p>
+      </div>
+
+      <!-- 滑桿 -->
+      <div class="form-group">
+        <label>音量：{{ sliderValue }}</label>
+        <input type="range" [(ngModel)]="sliderValue" min="0" max="100">
+        <div class="volume-bar" [style.width.%]="sliderValue"></div>
+      </div>
+    </div>
+
+    <div class="code-hint">
+      <code>[(ngModel)]="userName"</code> - 雙向綁定<br>
+      需要匯入 FormsModule
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- 5. 樣式與類別綁定 -->
+  <!-- ============================================ -->
+  <section class="section">
+    <h3>5. 樣式與類別綁定</h3>
+
+    <div class="example">
+      <!-- ngClass 綁定 -->
+      <p
+        [ngClass]="{
+          'highlighted': isHighlighted,
+          'large-text': fontSize > 20
+        }"
+        [style.font-size.px]="fontSize"
+        [style.color]="textColor"
+      >
+        這段文字會根據條件改變樣式
+      </p>
+
+      <div class="controls">
+        <button (click)="toggleHighlight()">
+          切換高亮 ({{ isHighlighted ? 'ON' : 'OFF' }})
+        </button>
+        <button (click)="fontSize = fontSize + 2">放大字體</button>
+        <button (click)="fontSize = fontSize - 2">縮小字體</button>
+        <input type="color" [(ngModel)]="textColor">
+      </div>
+    </div>
+
+    <div class="code-hint">
+      <code>[ngClass]="&#123;'class-name': condition&#125;"</code><br>
+      <code>[style.font-size.px]="fontSize"</code>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,342 @@
+<div class="demo-container">
+  <h2>Angular 指令示範</h2>
+
+  <!-- ============================================ -->
+  <!-- 1. @if 結構型指令 (Angular 17+ 新語法) -->
+  <!-- ============================================ -->
+  <section class="section">
+    <h3>1. &#64;if 條件渲染 (新語法)</h3>
+    <p>根據條件決定是否顯示元素</p>
+
+    <div class="example">
+      <button (click)="toggleLogin()">
+        {{ isLoggedIn() ? '登出' : '登入' }}
+      </button>
+
+      <!-- Angular 17+ @if 語法 -->
+      @if (isLoggedIn()) {
+        <div class="user-card">
+          @if (currentUser) {
+            <img [src]="currentUser.avatar" alt="Avatar" class="avatar">
+            <div class="user-info">
+              <h4>歡迎回來，{{ currentUser.name }}！</h4>
+              <span class="role-badge">{{ currentUser.role }}</span>
+            </div>
+          }
+        </div>
+
+        <button (click)="toggleDetails()">
+          {{ showDetails() ? '隱藏' : '顯示' }}詳細資訊
+        </button>
+
+        @if (showDetails()) {
+          <div class="details-panel">
+            <p>這是更多的使用者資訊...</p>
+            <p>登入時間：{{ loginTime | date:'yyyy/MM/dd HH:mm' }}</p>
+          </div>
+        }
+      } @else {
+        <div class="login-prompt">
+          <p>請先登入以查看內容</p>
+        </div>
+      }
+    </div>
+
+    <div class="code-hint">
+      <code>&#64;if (condition) &#123; ... &#125; &#64;else &#123; ... &#125;</code>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- 2. @for 迴圈渲染 (Angular 17+ 新語法) -->
+  <!-- ============================================ -->
+  <section class="section">
+    <h3>2. &#64;for 迴圈渲染 (新語法)</h3>
+    <p>重複渲染一組元素</p>
+
+    <div class="example">
+      <div class="product-controls">
+        <button (click)="addProduct()">新增產品</button>
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          placeholder="搜尋產品..."
+        >
+      </div>
+
+      <!-- Angular 17+ @for 語法 -->
+      <div class="product-grid">
+        @for (product of filteredProducts; track product.id; let i = $index, first = $first, last = $last) {
+          <div
+            class="product-card"
+            [class.first-item]="first"
+            [class.last-item]="last"
+            [class.out-of-stock]="!product.inStock"
+          >
+            <span class="product-index">#{{ i + 1 }}</span>
+            <h4>{{ product.name }}</h4>
+            <p class="price">NT$ {{ product.price | number }}</p>
+            <span class="category">{{ product.category }}</span>
+            <span class="stock" [class.available]="product.inStock">
+              {{ product.inStock ? '有庫存' : '缺貨中' }}
+            </span>
+            <button
+              class="delete-btn"
+              (click)="removeProduct(product.id)"
+            >
+              刪除
+            </button>
+          </div>
+        } @empty {
+          <div class="empty-state">
+            <p>找不到符合的產品</p>
+          </div>
+        }
+      </div>
+
+      <!-- 顏色方塊範例 -->
+      <div class="color-boxes">
+        @for (color of colors; track color; let idx = $index) {
+          <div
+            class="color-box"
+            [style.background-color]="color"
+          >
+            {{ idx + 1 }}
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="code-hint">
+      <code>&#64;for (item of items; track item.id) &#123; ... &#125;</code><br>
+      可用變數: $index, $first, $last, $even, $odd, $count
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- 3. @switch 條件分支 (Angular 17+ 新語法) -->
+  <!-- ============================================ -->
+  <section class="section">
+    <h3>3. &#64;switch 條件分支 (新語法)</h3>
+    <p>根據值切換不同的內容</p>
+
+    <div class="example">
+      <!-- 視圖切換 -->
+      <div class="view-switcher">
+        <button
+          [class.active]="selectedView === 'grid'"
+          (click)="setView('grid')"
+        >
+          格狀
+        </button>
+        <button
+          [class.active]="selectedView === 'list'"
+          (click)="setView('list')"
+        >
+          列表
+        </button>
+        <button
+          [class.active]="selectedView === 'table'"
+          (click)="setView('table')"
+        >
+          表格
+        </button>
+      </div>
+
+      @switch (selectedView) {
+        @case ('grid') {
+          <div class="view-content grid-view">
+            <div class="grid-item">項目 1</div>
+            <div class="grid-item">項目 2</div>
+            <div class="grid-item">項目 3</div>
+            <div class="grid-item">項目 4</div>
+          </div>
+        }
+        @case ('list') {
+          <div class="view-content list-view">
+            <div class="list-item">項目 1</div>
+            <div class="list-item">項目 2</div>
+            <div class="list-item">項目 3</div>
+            <div class="list-item">項目 4</div>
+          </div>
+        }
+        @case ('table') {
+          <table class="view-content table-view">
+            <thead>
+              <tr><th>ID</th><th>名稱</th><th>狀態</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>項目 1</td><td>啟用</td></tr>
+              <tr><td>2</td><td>項目 2</td><td>停用</td></tr>
+              <tr><td>3</td><td>項目 3</td><td>啟用</td></tr>
+            </tbody>
+          </table>
+        }
+        @default {
+          <p>未知的視圖類型</p>
+        }
+      }
+
+      <!-- 角色權限範例 -->
+      <hr>
+      <h4>角色權限示範</h4>
+      <div class="role-switcher">
+        <button
+          [class.active]="userRole === 'admin'"
+          (click)="setRole('admin')"
+        >
+          管理員
+        </button>
+        <button
+          [class.active]="userRole === 'editor'"
+          (click)="setRole('editor')"
+        >
+          編輯者
+        </button>
+        <button
+          [class.active]="userRole === 'viewer'"
+          (click)="setRole('viewer')"
+        >
+          檢視者
+        </button>
+      </div>
+
+      @switch (userRole) {
+        @case ('admin') {
+          <div class="role-content admin">
+            <p>您擁有完整的管理權限</p>
+            <ul>
+              <li>新增/編輯/刪除內容</li>
+              <li>管理使用者</li>
+              <li>系統設定</li>
+            </ul>
+          </div>
+        }
+        @case ('editor') {
+          <div class="role-content editor">
+            <p>您可以編輯內容</p>
+            <ul>
+              <li>新增/編輯內容</li>
+              <li>檢視統計資料</li>
+            </ul>
+          </div>
+        }
+        @case ('viewer') {
+          <div class="role-content viewer">
+            <p>您只能檢視內容</p>
+            <ul>
+              <li>瀏覽內容</li>
+            </ul>
+          </div>
+        }
+      }
+    </div>
+
+    <div class="code-hint">
+      <code>&#64;switch (value) &#123; &#64;case ('a') &#123;...&#125; &#64;default &#123;...&#125; &#125;</code>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- 4. ngClass 屬性型指令 -->
+  <!-- ============================================ -->
+  <section class="section">
+    <h3>4. ngClass 動態類別</h3>
+    <p>根據條件動態添加 CSS 類別</p>
+
+    <div class="example">
+      <button (click)="toggleActive()">切換 Active</button>
+      <button (click)="isPrimary = !isPrimary">切換 Primary</button>
+      <button (click)="toggleSize()">切換大小</button>
+
+      <!-- 物件語法 -->
+      <div
+        class="styled-box"
+        [ngClass]="{
+          'active': isActive,
+          'primary': isPrimary,
+          'large': isLarge
+        }"
+      >
+        ngClass 物件語法
+      </div>
+
+      <!-- 陣列語法 -->
+      <div
+        class="styled-box"
+        [ngClass]="['base-style', isActive ? 'active' : '', isPrimary ? 'primary' : '']"
+      >
+        ngClass 陣列語法
+      </div>
+
+      <!-- 字串語法 -->
+      <div
+        class="styled-box"
+        [ngClass]="isActive ? 'active primary' : 'inactive'"
+      >
+        ngClass 字串語法
+      </div>
+    </div>
+
+    <div class="code-hint">
+      <code>[ngClass]="&#123;'class-name': condition&#125;"</code>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- 5. ngStyle 動態樣式 -->
+  <!-- ============================================ -->
+  <section class="section">
+    <h3>5. ngStyle 動態樣式</h3>
+    <p>根據條件動態設定內聯樣式</p>
+
+    <div class="example">
+      <div class="style-controls">
+        <label>
+          字體大小: {{ fontSize }}px
+          <input type="range" [(ngModel)]="fontSize" min="12" max="32">
+        </label>
+        <label>
+          背景色:
+          <input type="color" [(ngModel)]="bgColor">
+        </label>
+        <label>
+          文字色:
+          <input type="color" [(ngModel)]="textColor">
+        </label>
+      </div>
+
+      <!-- ngStyle 物件語法 -->
+      <div
+        class="styled-text"
+        [ngStyle]="{
+          'font-size.px': fontSize,
+          'background-color': bgColor,
+          'color': textColor,
+          'padding': '20px',
+          'border-radius': '8px'
+        }"
+      >
+        這段文字的樣式會動態改變
+      </div>
+
+      <!-- 直接樣式綁定 -->
+      <div
+        class="styled-text"
+        [style.font-size.px]="fontSize"
+        [style.background-color]="bgColor"
+        [style.color]="textColor"
+        [style.padding]="'20px'"
+        [style.border-radius]="'8px'"
+        [style.margin-top]="'10px'"
+      >
+        直接樣式綁定語法
+      </div>
+    </div>
+
+    <div class="code-hint">
+      <code>[ngStyle]="&#123;'property': value&#125;"</code><br>
+      <code>[style.font-size.px]="fontSize"</code>
+    </div>
+  </section>
+</div>

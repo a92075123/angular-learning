@@ -1,0 +1,135 @@
+<div class="home-container">
+  <!-- Hero Section -->
+  <header class="hero">
+    <h1>Angular 學習專案</h1>
+    <p class="hero-subtitle">從零開始掌握 Angular 前端框架</p>
+    <div class="progress-info">
+      <span class="progress-text">
+        已完成 {{ availableCount }} / {{ totalCount }} 個學習模組
+      </span>
+      <div class="progress-bar">
+        <div
+          class="progress-fill"
+          [style.width.%]="(availableCount / totalCount) * 100"
+        ></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Learning Modules Grid -->
+  <section class="modules-section">
+    <h2>學習模組</h2>
+    <div class="modules-grid">
+      @for (module of modules; track module.route) {
+        <div
+          class="module-card"
+          [class.coming-soon]="module.status === 'coming-soon'"
+        >
+          <div class="module-icon">{{ module.icon }}</div>
+          <h3>{{ module.title }}</h3>
+          <p class="module-description">{{ module.description }}</p>
+
+          <div class="module-topics">
+            @for (topic of module.topics; track topic) {
+              <span class="topic-tag">{{ topic }}</span>
+            }
+          </div>
+
+          @if (module.status === 'available') {
+            <a [routerLink]="module.route" class="module-btn">
+              開始學習
+            </a>
+          } @else {
+            <span class="coming-soon-badge">即將推出</span>
+          }
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- Quick Start Section -->
+  <section class="quickstart-section">
+    <h2>快速開始</h2>
+    <div class="quickstart-content">
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h4>閱讀 TypeScript 基礎</h4>
+          <p>在 <code>learning-materials/01-typescript-basics/</code> 資料夾中</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h4>學習資料綁定</h4>
+          <p>點擊上方「資料綁定」模組開始互動式學習</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h4>練習指令使用</h4>
+          <p>掌握 Angular 17+ 的新控制流語法</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h4>實作 Todo App</h4>
+          <p>完成第一個完整的 Angular 應用程式</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Resources Section -->
+  <section class="resources-section">
+    <h2>學習資源</h2>
+    <div class="resources-grid">
+      @for (resource of resources; track resource.url) {
+        <a
+          [href]="resource.url"
+          target="_blank"
+          rel="noopener"
+          class="resource-card"
+        >
+          <span class="resource-icon">{{ resource.icon }}</span>
+          <span class="resource-title">{{ resource.title }}</span>
+          <span class="external-icon">↗</span>
+        </a>
+      }
+    </div>
+  </section>
+
+  <!-- Tips Section -->
+  <section class="tips-section">
+    <h2>學習建議</h2>
+    <ul class="tips-list">
+      <li>
+        <strong>動手練習</strong> - 每個概念都要親自寫程式碼，不要只看不做
+      </li>
+      <li>
+        <strong>善用 Angular CLI</strong> - 使用 <code>ng generate</code> 快速建立元件和服務
+      </li>
+      <li>
+        <strong>閱讀官方文件</strong> - 這是最準確、最新的學習資源
+      </li>
+      <li>
+        <strong>建立學習筆記</strong> - 用自己的話整理理解的概念
+      </li>
+      <li>
+        <strong>完成實戰專案</strong> - 最好的學習方式是實際建立應用程式
+      </li>
+    </ul>
+  </section>
+
+  <!-- Footer -->
+  <footer class="home-footer">
+    <p>
+      專案位置：<code>~/Documents/angular-learning</code>
+    </p>
+    <p>
+      啟動開發伺服器：<code>ng serve</code>，然後開啟 <a href="http://localhost:4200" target="_blank">http://localhost:4200</a>
+    </p>
+  </footer>
+</div>
