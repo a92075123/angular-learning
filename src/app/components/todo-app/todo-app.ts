@@ -13,14 +13,15 @@
  * - LocalStorage 持久化
  */
 
-import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { TodoService, Todo } from '../../services/todo';
+import {Component, inject, signal} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {TodoService, Todo} from '../../services/todo';
+import {TodoTable} from '../shared/todo-table/todo-table';
 
 @Component({
   selector: 'app-todo-app',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TodoTable],
   templateUrl: './todo-app.html',
   styleUrl: './todo-app.css'
 })
@@ -31,48 +32,22 @@ export class TodoApp {
   // 使用 inject() 函式注入服務（Angular 14+ 推薦方式）
   private todoService = inject(TodoService);
 
-  // 元件本地狀態
-  newTodoTitle = '';
-  editingId = signal<string | null>(null);
-  editingTitle = '';
+  todos = signal<Todo[]>([]);
 
-  // ============================================
-  // 從服務取得響應式狀態
-  // ============================================
-
-  // ============================================
-  // 新增待辦事項
-  // ============================================
-
-
-
-
-  // ============================================
-  // 切換完成狀態
-  // ============================================
-
-
-  // ============================================
-  // 編輯待辦事項
-  // ============================================
-
-
-  cancelEdit(): void {
-    this.editingId.set(null);
-    this.editingTitle = '';
+  constructor() {
+    this.getTodoList();
   }
 
-  handleEditKeydown(event: KeyboardEvent, id: string): void {
-    if (event.key === 'Enter') {
-
-    } else if (event.key === 'Escape') {
-      this.cancelEdit();
-    }
+  getTodoList() {
+     this.todoService.getAll().subscribe(result=>{
+       this.todos.set(result);
+     });
   }
 
-  isEditing(id: string): boolean {
-    return this.editingId() === id;
+  searchTodoGetOne(value: string) {
+    this.todoService.getOne(value).subscribe(result =>{
+      this.todos.set(result);
+    });
   }
-
 
 }
