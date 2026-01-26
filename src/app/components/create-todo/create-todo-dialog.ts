@@ -73,9 +73,9 @@ export class CreateTodoDialog {
       },
       complete:()=>{
         console.log("API已完成")
+        this.dialogRef.close();
       }
     });
-
   }
 
 }

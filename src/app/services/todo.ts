@@ -39,21 +39,18 @@ export class TodoService {
   private apiUrl = 'http://localhost:8080/api/todos';
 
 
-  // 使用 Signal 管理狀態（Angular 16+ 推薦方式）
-  private todosSignal = signal<Todo[]>([]);
-
   // ============================================
   // Computed Signals（衍生狀態）
   // ============================================
 
-  // 取得所有待辦事項
-  readonly todos = this.todosSignal.asReadonly();
-
-
-
   // 查詢全部
   getAll() {
     return this.http.get<Todo[]>(this.apiUrl + "/getAll");
+  }
+
+  getOne(value:string) {
+    if(!value.trim()) return this.getAll();
+    return this.http.get<Todo[]>(this.apiUrl + `/getOne/${value}`);
   }
 
   // 新增代辦事項
