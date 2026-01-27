@@ -22,6 +22,7 @@ import { Observable } from 'rxjs';
 // 介面定義 (Interface)
 // ============================================
 export interface Todo {
+  id : Number;
   todoTitle: string;
   todoContent: string;
 }
@@ -55,8 +56,18 @@ export class TodoService {
 
   // 新增代辦事項
   createTodo(todo: Todo) {
-    console.log(this.apiUrl + "/create")
     return this.http.post<Todo[]>(this.apiUrl + "/create", todo);
+  }
+
+  //刪除代辦事項
+  deleteTodo(id:string) {
+    console.log("刪除代辦事項第" + id + "筆");
+    return this.http.post(this.apiUrl + `/delete`,id);
+  }
+
+  //更新待辦事項項次
+  updateTodoLocation(list:Todo[]) {
+    return this.http.post(this.apiUrl + `/updateTodoLocation`,list);
   }
 
 

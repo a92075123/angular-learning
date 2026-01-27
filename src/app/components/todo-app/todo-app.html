@@ -6,23 +6,17 @@
 
   <div class="todo-input-section">
     <div class="input-group">
-      <span class="input-label">代號:</span>
-      <input #codeInput class="todo-input" type="text" placeholder="請輸入代號">
-      <button class="add-btn" (click)="searchTodoGetOne(codeInput.value)" )>
+      <span class="input-label">標題:</span>
+      <input #codeInput class="todo-input" type="text" placeholder="請輸入標題">
+      <button class="add-btn" (click)="searchTodoGetOne(codeInput.value)">
         搜尋
       </button>
     </div>
   </div>
 
-
-
   <!-- 待辦事項列表 -->
-  <app-todo-table [todos]="todos()" />
+  <app-todo-table [todos]="todos()"
+                  (deleteRequest)= "deleteTodo($event)"
+                  (saveOrder) = "updateLocation($event)"/>
 
-  <!-- ============================================ -->
-  <!-- 使用說明 -->
-  <!-- ============================================ -->
-  <div class="help-text">
-    <p>💡 提示：雙擊待辦事項可進入編輯模式，按 Enter 儲存，按 Esc 取消</p>
-  </div>
 </div>

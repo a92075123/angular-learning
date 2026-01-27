@@ -1,12 +1,30 @@
 @if (todos().length > 0) {
-  <table mat-table [dataSource]="todos()" class="todo-table">
+  <table mat-table [dataSource]="orderedTodos()" class="todo-table"
+         cdkDropList
+         (cdkDropListDropped)="onChangeLocation($event)"
+  >
 
-    <!-- 項次 -->
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef>項次</th>
-      <td mat-cell *matCellDef="let todo">{{ todo.id }}</td>
+    <!-- 拖曳欄位 -->
+    <ng-container matColumnDef="drag">
+      <th mat-header-cell *matHeaderCellDef width="50"></th>
+      <td mat-cell *matCellDef="let row">
+        <mat-icon cdkDragHandle style="cursor: move;">drag_indicator</mat-icon>
+      </td>
     </ng-container>
 
+    <!-- 項次 -->
+    <ng-container matColumnDef="sort_no">
+      <th mat-header-cell *matHeaderCellDef>項次</th>
+      <td mat-cell *matCellDef="let todo">{{ todo.sort_no }}</td>
+    </ng-container>
+
+    <!-- 功能按鈕 -->
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef>功能</th>
+      <td mat-cell *matCellDef="let todo">
+        <button class="delete-btn" type="button" (click)="onDeleteClick(todo.id)">刪除</button>
+      </td>
+    </ng-container>
 
     <!-- 標題欄位 -->
     <ng-container matColumnDef="todoTitle">
@@ -21,8 +39,11 @@
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns" cdkDrag></tr>
   </table>
+  @if(isDataLocationChange){
+    <button class="save-btn" [hidden]="true" (click)="onSave()">儲存順序</button>
+  }
 } @else {
   <div class="empty-state">尚無待辦事項</div>
 }

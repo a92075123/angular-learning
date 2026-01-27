@@ -61,6 +61,7 @@ export class CreateTodoDialog {
   create(): void {
     // 關閉 Dialog 並回傳資料
     let data : Todo = {
+      id : 0 ,
       todoTitle: this.todoTitle(),
       todoContent: this.todoContent()
     }

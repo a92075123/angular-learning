@@ -18,6 +18,7 @@ import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TodoService, Todo} from '../../services/todo';
 import {TodoTable} from '../shared/todo-table/todo-table';
+import { MatTable } from '@angular/material/table';
 
 @Component({
   selector: 'app-todo-app',
@@ -47,6 +48,28 @@ export class TodoApp {
   searchTodoGetOne(value: string) {
     this.todoService.getOne(value).subscribe(result =>{
       this.todos.set(result);
+    });
+  }
+
+  //刪除代辦事項
+  deleteTodo(id:string):void {
+    const isDelete = window.confirm("是否要刪除"+ id + "項次");
+    if (!isDelete) return;
+    this.todoService.deleteTodo(id).subscribe({
+      complete:()=>{
+        alert("刪除成功!!")
+        this.getTodoList();
+      }
+    });
+  }
+
+  //更新代辦事項的項次
+  updateLocation (list:Todo[]){
+    this.todoService.updateTodoLocation(list).subscribe({
+      complete:()=>{
+        alert("更新成功!!")
+        this.getTodoList();
+      }
     });
   }
 
