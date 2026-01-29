@@ -24,6 +24,8 @@ export class TodoTable {
 
   //刪除
   deleteRequest = output<string>();
+  //修改
+  editRequest = output<Todo>();
   // 儲存時通知父元件
   saveOrder = output<Todo[]>();
   // 待辦事項資料（由父元件傳入）
@@ -31,27 +33,36 @@ export class TodoTable {
   // 內部可修改的排序副本
   orderedTodos = signal<Todo[]>([]);
   // 資料順序是否有被改變
-  isDataLocationChange : boolean = false;
+  isShowButton : boolean = false;
 
-  // input 變動時同步
   constructor() {
     effect(() => {
       this.orderedTodos.set([...this.todos()]);
     });
   }
+
   //刪除按鈕事件
   onDeleteClick(id: string): void {
     this.deleteRequest.emit(id);
+  }
+
+  //修改按鈕事件
+  onEditClick(todo:Todo): void {
+    this.editRequest.emit(todo);
   }
 
   // 拖曳排序
   onChangeLocation(event: CdkDragDrop<Todo[]>): void {
     const data = [...this.orderedTodos()];
     moveItemInArray(data, event.previousIndex, event.currentIndex);
+    data.flatMap((item,index)=>{
+        item.sort_no = index+1;
+    });
+
     this.orderedTodos.set(data);
     // 比對排序後的資料與原始資料順序是否一致
     const original = this.todos();
-    this.isDataLocationChange = data.some((todo, index) => todo.id !== original[index].id);
+    this.isShowButton= data.some((todo, index) => todo.id !== original[index].id);
   }
   // 儲存按鈕事件
   onSave(): void{

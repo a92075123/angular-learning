@@ -4,19 +4,24 @@
     <p class="subtitle">Angular 實戰專案 - 待辦事項應用</p>
   </header>
 
+  <div class="add-btn-wrapper">
+    <button class="red-btn" (click)="openTodoDiaLog()">新增代辦事項</button>
+  </div>
+
   <div class="todo-input-section">
     <div class="input-group">
       <span class="input-label">標題:</span>
       <input #codeInput class="todo-input" type="text" placeholder="請輸入標題">
-      <button class="add-btn" (click)="searchTodoGetOne(codeInput.value)">
-        搜尋
-      </button>
+      <button class="red-btn" (click)="searchTodoGetOne(codeInput.value)">搜尋</button>
     </div>
   </div>
 
   <!-- 待辦事項列表 -->
-  <app-todo-table [todos]="todos()"
-                  (deleteRequest)= "deleteTodo($event)"
-                  (saveOrder) = "updateLocation($event)"/>
+  <app-todo-table
+    [todos]="todos()"
+    (deleteRequest)="deleteTodo($event)"
+    (editRequest)="editTodo($event)"
+    (saveOrder)="updateLocation($event)"
+  />
 
 </div>

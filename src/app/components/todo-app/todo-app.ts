@@ -18,7 +18,8 @@ import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TodoService, Todo} from '../../services/todo';
 import {TodoTable} from '../shared/todo-table/todo-table';
-import { MatTable } from '@angular/material/table';
+import {TodoDialog} from '../shared/dialog/todo-dialog';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-todo-app',
@@ -33,18 +34,25 @@ export class TodoApp {
   // 使用 inject() 函式注入服務（Angular 14+ 推薦方式）
   private todoService = inject(TodoService);
 
+  // 初始化彈跳視窗
+  private dialog = inject(MatDialog);
+
+
   todos = signal<Todo[]>([]);
 
+  //初始化
   constructor() {
     this.getTodoList();
   }
 
+  //取得代辦事項資料
   getTodoList() {
      this.todoService.getAll().subscribe(result=>{
        this.todos.set(result);
      });
   }
 
+  //搜尋代辦事項
   searchTodoGetOne(value: string) {
     this.todoService.getOne(value).subscribe(result =>{
       this.todos.set(result);
@@ -53,7 +61,7 @@ export class TodoApp {
 
   //刪除代辦事項
   deleteTodo(id:string):void {
-    const isDelete = window.confirm("是否要刪除"+ id + "項次");
+    const isDelete = window.confirm("是否要刪除");
     if (!isDelete) return;
     this.todoService.deleteTodo(id).subscribe({
       complete:()=>{
@@ -61,6 +69,18 @@ export class TodoApp {
         this.getTodoList();
       }
     });
+  }
+
+  editTodo(todo: Todo) {
+    this.openTodoDiaLog(todo, "edit");
+    // const isEdit = window.confirm("是否要更新");
+    // if (!isEdit) return;
+    // this.todoService.editTodo(todo).subscribe({
+    //   complete:()=>{
+    //     alert("更新成功!!")
+    //     this.getTodoList();
+    //   }
+    // });
   }
 
   //更新代辦事項的項次
@@ -73,4 +93,21 @@ export class TodoApp {
     });
   }
 
+  //開啟新增彈跳視窗
+  openTodoDiaLog(todo?:Todo,mode:string = "create"): void {
+    const dialogRef = this.dialog.open(TodoDialog, {
+      width: '800px',
+      height: '500px',
+      data:{
+        jsonData : todo,
+        mode : mode
+      }
+    });
+
+    dialogRef.afterClosed().subscribe({
+      complete:()=>{
+       this.getTodoList();
+      }
+    })
+  }
 }

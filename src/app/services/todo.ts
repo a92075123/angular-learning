@@ -12,9 +12,8 @@
  * 3. 使用 Signal 進行狀態管理
  */
 
-import { Injectable, signal, inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 
 
 
@@ -25,6 +24,9 @@ export interface Todo {
   id : Number;
   todoTitle: string;
   todoContent: string;
+  sort_no: Number;
+  create_at:string;
+  update_at:string;
 }
 
 
@@ -55,8 +57,13 @@ export class TodoService {
   }
 
   // 新增代辦事項
-  createTodo(todo: Todo) {
+  createTodo(todo: Object) {
     return this.http.post<Todo[]>(this.apiUrl + "/create", todo);
+  }
+
+  //編輯代辦事項
+  editTodo(todo: Object) {
+    return this.http.post(this.apiUrl + `/update`,todo);
   }
 
   //刪除代辦事項
