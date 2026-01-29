@@ -26,7 +26,7 @@ export class App {
     { label: '資料綁定', route: '/data-binding', exact: false },
     { label: '指令', route: '/directives', exact: false },
     { label: '代辦事項清單', route: '/todo', exact: false },
-    { label: '新增代辦事項', route: '/create-todo', exact: false }
+    { label: '登入', route: '/login', exact: false },
   ];
 
   // 行動版選單開關

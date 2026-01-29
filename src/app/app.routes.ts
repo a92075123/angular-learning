@@ -8,7 +8,6 @@
  */
 
 import { Routes } from '@angular/router';
-import {CreateTodo} from './components/create-todo/create-todo';
 
 // 使用延遲載入 (Lazy Loading) 來優化效能
 export const routes: Routes = [
@@ -34,9 +33,14 @@ export const routes: Routes = [
       import('./components/todo-app/todo-app').then(m => m.TodoApp)
   },
   {
-    path: 'create-todo',
+    path: 'login',
     loadComponent: () =>
-      import('./components/create-todo/create-todo').then(m => m.CreateTodo)
+      import('./components/user-login/user-login').then(m => m.UserLogin)
+  },
+  {
+    path: 'register',
+    loadComponent: () =>
+      import('./components/user-register/user-register').then(m => m.UserRegister)
   },
   // 萬用路由 - 處理找不到的頁面
   {

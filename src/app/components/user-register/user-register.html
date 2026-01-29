@@ -1,0 +1,36 @@
+<div class="register-container">
+  <div class="register-card">
+    <h2 class="register-title">會員註冊</h2>
+    <form [formGroup]="form"  (ngSubmit)="onSubmit()"  class="register-form">
+      <div class="form-group">
+        <label for="username">帳號</label>
+        <input type="text" id="username" placeholder="請輸入帳號" formControlName="username" />
+      </div>
+      <div class="form-group">
+        <label for="email">電子郵件</label>
+        <input type="email" id="email" placeholder="請輸入電子郵件" formControlName="email" />
+      </div>
+      <div class="form-group">
+        <label for="password">密碼</label>
+        <input type="password" id="password" placeholder="請輸入密碼" formControlName="password" />
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword">確認密碼</label>
+        <input type="password" id="confirmPassword" placeholder="請再次輸入密碼"  formControlName="confirmPassword"/>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn-register" )>註冊</button>
+      </div>
+      <div class="form-footer">
+        <span>已經有帳號？</span>
+        <a href="/login">返回登入</a>
+      </div>
+      @if (emailIsInvalid) {
+        <p>請檢察信箱是否正確</p>
+      }
+      @if (passwordIsInvalid) {
+        <p>請檢察密碼是否正確</p>
+      }
+    </form>
+  </div>
+</div>
