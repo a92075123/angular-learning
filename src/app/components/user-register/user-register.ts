@@ -1,23 +1,14 @@
-import {Component, DestroyRef, inject, OnInit} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {
   AbstractControl,
-  FormArray,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
-import {catchError, debounceTime, map, of} from "rxjs";
+import {catchError, map, of} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 
-
-//自訂驗證規則 return null 驗證通過 反之不通過
-function mustIncludesQuestionMark(control: AbstractControl) {
-  if (control.value.includes("?")) {
-    return null;
-  }
-  return {doesNotIncludesQuestionMark: true}
-}
 
 //自訂規則 檢查密碼與確認密碼是否一致
 function equalValues(val1: string, val2: string) {
@@ -29,13 +20,6 @@ function equalValues(val1: string, val2: string) {
   }
 }
 
-let initialEmailVal = '';
-const savedForm = window.localStorage.getItem('saved-register-form');
-
-if (savedForm) {
-  const loadedForm = JSON.parse(savedForm);
-  initialEmailVal = loadedForm.email;
-}
 
 @Component({
   selector: 'app-user-register',
@@ -43,12 +27,11 @@ if (savedForm) {
   templateUrl: './user-register.html',
   styleUrl: './user-register.css',
 })
-export class UserRegister implements OnInit {
+export class UserRegister {
 
   private http = inject(HttpClient);
   private apiUrl = 'http://localhost:8080/api/';
-  //初始化結束後
-  private destroyRef = inject(DestroyRef);
+
 
   //自訂規則 asyncValidators 請求到後端檢測是否有這筆mail
   emailIsUnique = (control: AbstractControl) => {
@@ -57,7 +40,7 @@ export class UserRegister implements OnInit {
 
     return this.http.get<{ exists: boolean }>(this.apiUrl + `checkEmail?email=${email}`).pipe(
         map(res => res.exists ?
-            {emailExists: true} : null),
+            {emailExists: '此 Email 已被使用'} : null),
         catchError(() => of(null))
     );
   };
@@ -67,27 +50,27 @@ export class UserRegister implements OnInit {
     username: new FormControl('', {
       validators: [Validators.required]
     }),
-    email: new FormControl(initialEmailVal, {
+    email: new FormControl('', {
       validators: [Validators.email, Validators.required],
       asyncValidators: [this.emailIsUnique],
     }),
-    role: new FormControl('user', {
-      validators: [Validators.required]
-    }),
-    //多選框 - 興趣（FormArray 用索引對應 interestLabels）
-    interests: new FormArray([
-      new FormControl(false),
-      new FormControl(false),
-      new FormControl(false),
-      new FormControl(false),
-      new FormControl(false),
-    ]),
+    // role: new FormControl('user', {
+    //   validators: [Validators.required]
+    // }),
+    // //多選框 - 興趣（FormArray 用索引對應 interestLabels）
+    // interests: new FormArray([
+    //   new FormControl(false),
+    //   new FormControl(false),
+    //   new FormControl(false),
+    //   new FormControl(false),
+    //   new FormControl(false),
+    // ]),
     agreeTerms: new FormControl(false, {
       validators: [Validators.requiredTrue]
     }),
     passwords: new FormGroup({
       password: new FormControl('', {
-        validators: [Validators.minLength(6), Validators.required]
+        validators: [Validators.minLength(6), Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/)]
       }),
       confirmPassword: new FormControl('', {
         validators: [Validators.minLength(6), Validators.required]
@@ -106,17 +89,6 @@ export class UserRegister implements OnInit {
     console.log(this.form.value.email);
   }
 
-  ngOnInit(): void {
-    const subscription = this.form.valueChanges
-    .pipe(debounceTime(500))
-    .subscribe({
-      next: (value) => {
-        window.localStorage.setItem('saved-register-form', JSON.stringify({email: value.email}));
-      }
-    });
-    //設定好localStorage 並關閉訂閱
-    this.destroyRef.onDestroy(() => subscription.unsubscribe());
-  }
 
   get emailIsInvalid() {
     return (
