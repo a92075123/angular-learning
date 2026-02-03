@@ -1,25 +1,68 @@
 <div class="register-container">
   <div class="register-card">
     <h2 class="register-title">會員註冊</h2>
-    <form [formGroup]="form"  (ngSubmit)="onSubmit()"  class="register-form">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="register-form">
       <div class="form-group">
         <label for="username">帳號</label>
-        <input type="text" id="username" placeholder="請輸入帳號" formControlName="username" />
+        <input type="text" id="username" placeholder="請輸入帳號" formControlName="username"/>
       </div>
       <div class="form-group">
         <label for="email">電子郵件</label>
-        <input type="email" id="email" placeholder="請輸入電子郵件" formControlName="email" />
+        <input type="email" id="email" placeholder="請輸入電子郵件" formControlName="email"/>
       </div>
       <div class="form-group">
-        <label for="password">密碼</label>
-        <input type="password" id="password" placeholder="請輸入密碼" formControlName="password" />
+        <label for="role">角色</label>
+        <select id="role" formControlName="role">
+          <option value="user">一般使用者</option>
+          <option value="editor">編輯者</option>
+          <option value="admin">管理員</option>
+        </select>
       </div>
-      <div class="form-group">
-        <label for="confirmPassword">確認密碼</label>
-        <input type="password" id="confirmPassword" placeholder="請再次輸入密碼"  formControlName="confirmPassword"/>
+      <div formGroupName="passwords">
+        <div class="form-group">
+          <label for="password">密碼</label>
+          <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="請輸入密碼"
+              formControlName="password"
+          />
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">確認密碼</label>
+          <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              placeholder="請再次輸入密碼"
+              formControlName="confirmPassword"
+          />
+        </div>
+      </div>
+      <div class="form-group checkbox-group" formArrayName="interests">
+        <label>興趣（可多選）</label>
+        <label>
+          <input type="checkbox" formControlName="0" value="sports"/>
+          運動
+          <input type="checkbox" formControlName="1" value="music"/>
+          音樂
+          <input type="checkbox" formControlName="2" value="reading"/>
+          閱讀
+          <input type="checkbox" formControlName="3" value="travel"/>
+          旅遊
+          <input type="checkbox" formControlName="4" value="cooking"/>
+          烹飪
+        </label>
+      </div>
+      <div class="form-group checkbox-group">
+        <label>
+          <input type="checkbox" formControlName="agreeTerms"/>
+          我同意服務條款與隱私政策
+        </label>
       </div>
       <div class="form-actions">
-        <button type="submit" class="btn-register" )>註冊</button>
+        <button type="submit" class="btn-register">註冊</button>
       </div>
       <div class="form-footer">
         <span>已經有帳號？</span>

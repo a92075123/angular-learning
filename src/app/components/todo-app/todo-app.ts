@@ -16,7 +16,7 @@
 import {Component, inject, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {TodoService, Todo} from '../../services/todo';
+import {Todo, TodoService} from '../../services/todo';
 import {TodoTable} from '../shared/todo-table/todo-table';
 import {TodoDialog} from '../shared/dialog/todo-dialog';
 import {MatDialog} from '@angular/material/dialog';
@@ -47,24 +47,24 @@ export class TodoApp {
 
   //取得代辦事項資料
   getTodoList() {
-     this.todoService.getAll().subscribe(result=>{
-       this.todos.set(result);
-     });
+    this.todoService.getAll().subscribe(result => {
+      this.todos.set(result);
+    });
   }
 
   //搜尋代辦事項
   searchTodoGetOne(value: string) {
-    this.todoService.getOne(value).subscribe(result =>{
+    this.todoService.getOne(value).subscribe(result => {
       this.todos.set(result);
     });
   }
 
   //刪除代辦事項
-  deleteTodo(id:string):void {
+  deleteTodo(id: string): void {
     const isDelete = window.confirm("是否要刪除");
     if (!isDelete) return;
     this.todoService.deleteTodo(id).subscribe({
-      complete:()=>{
+      complete: () => {
         alert("刪除成功!!")
         this.getTodoList();
       }
@@ -73,20 +73,12 @@ export class TodoApp {
 
   editTodo(todo: Todo) {
     this.openTodoDiaLog(todo, "edit");
-    // const isEdit = window.confirm("是否要更新");
-    // if (!isEdit) return;
-    // this.todoService.editTodo(todo).subscribe({
-    //   complete:()=>{
-    //     alert("更新成功!!")
-    //     this.getTodoList();
-    //   }
-    // });
   }
 
   //更新代辦事項的項次
-  updateLocation (list:Todo[]){
+  updateLocation(list: Todo[]) {
     this.todoService.updateTodoLocation(list).subscribe({
-      complete:()=>{
+      complete: () => {
         alert("更新成功!!")
         this.getTodoList();
       }
@@ -94,19 +86,19 @@ export class TodoApp {
   }
 
   //開啟新增彈跳視窗
-  openTodoDiaLog(todo?:Todo,mode:string = "create"): void {
+  openTodoDiaLog(todo?: Todo, mode: string = "create"): void {
     const dialogRef = this.dialog.open(TodoDialog, {
       width: '800px',
       height: '500px',
-      data:{
-        jsonData : todo,
-        mode : mode
+      data: {
+        jsonData: todo,
+        mode: mode
       }
     });
 
     dialogRef.afterClosed().subscribe({
-      complete:()=>{
-       this.getTodoList();
+      complete: () => {
+        this.getTodoList();
       }
     })
   }
