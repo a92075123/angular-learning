@@ -1,13 +1,14 @@
 import {Component, inject, signal} from '@angular/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {MAT_DIALOG_DATA,MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {FormsModule} from '@angular/forms';
 import {Todo, TodoService} from '../../../services/todo';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
+
 // 定義傳入資料的型別
 interface DialogData {
-  jsonData : Todo;
+  jsonData: Todo;
   mode: string;
 }
 
@@ -23,22 +24,23 @@ interface DialogData {
   styleUrl: './todo-dialog.css',
   template: `
     <div class="dialog-wrapper">
-      <h2 mat-dialog-title>{{mode() === 'edit' ? '修改' : '新增'}}代辦事項</h2>
+      <h2 mat-dialog-title>{{ mode() === 'edit' ? '修改' : '新增' }}代辦事項</h2>
       <mat-dialog-content class="dialog-content">
         <br>
         <mat-form-field appearance="outline">
           <mat-label>標題</mat-label>
-          <input matInput [(ngModel)]="todoTitle" placeholder="輸入代辦事項標題">
+          <input matInput [(ngModel)]="todotitle" placeholder="輸入代辦事項標題">
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>內容</mat-label>
-          <textarea matInput [(ngModel)]="todoContent" placeholder="輸入代辦事項內容" rows="4"></textarea>
+          <textarea matInput [(ngModel)]="todocontent" placeholder="輸入代辦事項內容"
+                    rows="4"></textarea>
         </mat-form-field>
       </mat-dialog-content>
 
       <mat-dialog-actions align="end">
-        <button mat-flat-button color="primary"  (click)="save()">儲存</button>
+        <button mat-flat-button color="primary" (click)="save()">儲存</button>
         <button mat-button mat-dialog-close>取消</button>
       </mat-dialog-actions>
     </div>
@@ -60,21 +62,21 @@ export class TodoDialog {
   mode = signal(this.data.mode);
 
   //代辦事項標題
-  todoTitle : string = this.data.jsonData?.todoTitle ?? '' ;
+  todotitle: string = this.data.jsonData?.todotitle ?? '';
 
   //代辦事項內容
-  todoContent : string = this.data.jsonData?.todoContent ?? '';
+  todocontent: string = this.data.jsonData?.todocontent ?? '';
 
 
   save(): void {
     const data = {
       id: this.data.jsonData?.id,
-      todoTitle: this.todoTitle,
-      todoContent: this.todoContent,
+      todotitle: this.todotitle,
+      todocontent: this.todocontent,
     };
     const request = this.mode() === 'edit'
-      ? this.todoService.editTodo(data)
-      : this.todoService.createTodo(data);
+        ? this.todoService.editTodo(data)
+        : this.todoService.createTodo(data);
 
     request.subscribe({
       error: () => console.error('呼叫API失敗'),
