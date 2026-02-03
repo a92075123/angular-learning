@@ -1,10 +1,9 @@
-import {Component, effect, inject, input, output, signal} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
-import { MatIconModule } from '@angular/material/icon';
-import {CdkDragDrop, CdkDropList, DragDropModule, moveItemInArray} from '@angular/cdk/drag-drop';
+import {Component, effect, input, output, signal} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {MatTableModule} from '@angular/material/table';
+import {MatIconModule} from '@angular/material/icon';
+import {CdkDragDrop, DragDropModule, moveItemInArray} from '@angular/cdk/drag-drop';
 import {Todo} from '../../../services/todo';
-import {single} from 'rxjs';
 
 /**
  * 共用待辦事項表格元件
@@ -13,14 +12,14 @@ import {single} from 'rxjs';
  */
 @Component({
   selector: 'app-todo-table',
-  imports: [CommonModule, MatTableModule,MatIconModule,DragDropModule],
+  imports: [CommonModule, MatTableModule, MatIconModule, DragDropModule],
   templateUrl: './todo-table.html',
   styleUrl: './todo-table.css'
 })
 export class TodoTable {
 
   // 表格欄位定義
-  displayedColumns = ['action','sort_no','todoTitle', 'todoContent'];
+  displayedColumns = ['action', 'sort_no', 'todotitle', 'todocontent'];
 
   //刪除
   deleteRequest = output<string>();
@@ -33,7 +32,7 @@ export class TodoTable {
   // 內部可修改的排序副本
   orderedTodos = signal<Todo[]>([]);
   // 資料順序是否有被改變
-  isShowButton : boolean = false;
+  isShowButton: boolean = false;
 
   constructor() {
     effect(() => {
@@ -47,7 +46,7 @@ export class TodoTable {
   }
 
   //修改按鈕事件
-  onEditClick(todo:Todo): void {
+  onEditClick(todo: Todo): void {
     this.editRequest.emit(todo);
   }
 
@@ -55,17 +54,18 @@ export class TodoTable {
   onChangeLocation(event: CdkDragDrop<Todo[]>): void {
     const data = [...this.orderedTodos()];
     moveItemInArray(data, event.previousIndex, event.currentIndex);
-    data.flatMap((item,index)=>{
-        item.sort_no = index+1;
+    data.flatMap((item, index) => {
+      item.sort_no = index + 1;
     });
 
     this.orderedTodos.set(data);
     // 比對排序後的資料與原始資料順序是否一致
     const original = this.todos();
-    this.isShowButton= data.some((todo, index) => todo.id !== original[index].id);
+    this.isShowButton = data.some((todo, index) => todo.id !== original[index].id);
   }
+
   // 儲存按鈕事件
-  onSave(): void{
+  onSave(): void {
     this.saveOrder.emit(this.orderedTodos());
   }
 

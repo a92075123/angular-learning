@@ -12,21 +12,20 @@
  * 3. 使用 Signal 進行狀態管理
  */
 
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-
+import {inject, Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 
 
 // ============================================
 // 介面定義 (Interface)
 // ============================================
 export interface Todo {
-  id : Number;
-  todoTitle: string;
-  todoContent: string;
+  id: Number;
+  todotitle: string;
+  todocontent: string;
+  createAt: string;
+  updateAt: string;
   sort_no: Number;
-  create_at:string;
-  update_at:string;
 }
 
 
@@ -51,8 +50,8 @@ export class TodoService {
     return this.http.get<Todo[]>(this.apiUrl + "/getAll");
   }
 
-  getOne(value:string) {
-    if(!value.trim()) return this.getAll();
+  getOne(value: string) {
+    if (!value.trim()) return this.getAll();
     return this.http.get<Todo[]>(this.apiUrl + `/getOne/${value}`);
   }
 
@@ -63,18 +62,18 @@ export class TodoService {
 
   //編輯代辦事項
   editTodo(todo: Object) {
-    return this.http.post(this.apiUrl + `/update`,todo);
+    return this.http.post(this.apiUrl + `/update`, todo);
   }
 
   //刪除代辦事項
-  deleteTodo(id:string) {
+  deleteTodo(id: string) {
     console.log("刪除代辦事項第" + id + "筆");
-    return this.http.post(this.apiUrl + `/delete`,id);
+    return this.http.post(this.apiUrl + `/delete`, id);
   }
 
   //更新待辦事項項次
-  updateTodoLocation(list:Todo[]) {
-    return this.http.post(this.apiUrl + `/updateTodoLocation`,list);
+  updateTodoLocation(list: Todo[]) {
+    return this.http.post(this.apiUrl + `/updateTodoLocation`, list);
   }
 
 
