@@ -1,14 +1,17 @@
 <div class="login-container">
   <div class="login-card">
     <h2 class="login-title">會員登入</h2>
-    <form #form="ngForm" class="login-form" (ngSubmit)="onSubmit(form)" )>
+    <form [formGroup]="form" class="login-form" (click)="onSubmit()">
       <div class="form-group">
         <label for="username">帳號</label>
         <input type="text"
                id="username"
                name="username"
                placeholder="請輸入帳號"
-               ngModel required  #username="ngModel"/>
+               formControlName="username"/>
+        <!--        @if (usernameIsInvalid) {-->
+        <!--          <span class="error">帳號錯誤</span>-->
+        <!--        }-->
       </div>
       <div class="form-group">
         <label for="password">密碼</label>
@@ -16,26 +19,18 @@
                id="password"
                name="password"
                placeholder="請輸入密碼"
-               ngModel required #password="ngModel"/>
+               formControlName="password"/>
       </div>
+      @if (passwordIsInvalid) {
+        <span class="error">密碼錯誤</span>
+      }
       <div class="form-actions">
-        <button type="button" class="btn-login" (click)="onSubmit(form)" )>登入</button>
+        <button type="submit" class="btn-login">登入</button>
       </div>
       <div class="form-footer">
         <span>還沒有帳號？</span>
         <a href="/register">立即註冊</a>
       </div>
-
-      @if (username.touched && username.dirty && username.invalid){
-        <p>
-          請檢察帳號是否正確
-        </p>
-      }
-      @if (password.touched && password.dirty && password.invalid){
-        <p>
-          請檢察密碼是否正確
-        </p>
-      }
     </form>
   </div>
 </div>

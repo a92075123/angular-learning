@@ -1,55 +1,66 @@
-import {afterNextRender, Component, DestroyRef, inject, viewChild} from '@angular/core';
-import {FormsModule, NgForm} from '@angular/forms';
-import {debounceTime} from 'rxjs';
+import {Component, DestroyRef, inject, OnInit} from '@angular/core';
+import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {debounceTime} from "rxjs";
+
+
+let initialEmailVal = '';
+const savedForm = window.localStorage.getItem('saved-login-form');
+if (savedForm) {
+  const loadedForm = JSON.parse(savedForm);
+  initialEmailVal = loadedForm.username;
+}
 
 @Component({
   selector: 'app-user-login',
-  imports: [
-    FormsModule
-  ],
+  imports: [ReactiveFormsModule],
   templateUrl: './user-login.html',
   styleUrl: './user-login.css',
 })
-export class UserLogin {
+export class UserLogin implements OnInit {
 
-  //viewChild 取得模板的元素 #form
-  private form = viewChild.required<NgForm>('form');
   //關閉subscribe
   private destroyRef = inject(DestroyRef);
 
-  constructor() {
-    /*
-      afterNextRender 等畫面渲染完成後才執行（確保 form 已存在)
-      valueChange 表單值變化觸發
-     */
-    afterNextRender(()=>{
-      const saveForm = window.localStorage.getItem('saved-login-form');
+  form = new FormGroup({
+    username: new FormControl(initialEmailVal, {
+      validators: [Validators.required]
+    }),
+    password: new FormControl('', {
+      validators: [Validators.minLength(6), Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/)]
+    }),
+  });
 
-      if (saveForm) {
-        const loadedFormData = JSON.parse(saveForm);
-        const saveEmail = loadedFormData.username;
-        setTimeout(()=>{
-          this.form().controls['username'].setValue(saveEmail);
-        },1)
+  ngOnInit(): void {
+    const subscription = this.form.valueChanges
+    .pipe(debounceTime(500))
+    .subscribe({
+      next: (value) => {
+        window.localStorage.setItem('saved-login-form', JSON.stringify({username: value.username}));
       }
-
-      var subscribe = this.form().valueChanges?.pipe(debounceTime(500)).subscribe({
-        next:(value) => {
-          window.localStorage.setItem(
-            'saved-login-form',
-            JSON.stringify({username:value.username})
-          )
-        }
-      });
-      //關掉訂閱
-      this.destroyRef.onDestroy(()=> subscribe?.unsubscribe());
-    })
+    });
+    //設定好localStorage 並關閉訂閱
+    this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
 
-
   //發送
-  onSubmit(form: NgForm) {
-    if(!form.form.valid) return;
-    form.form.reset();
+  onSubmit() {
+    if (this.form.invalid) return;
+    // this.form.reset();
+  }
+
+  // get usernameIsInvalid() {
+  //   return (
+  //       this.form.controls.username.touched &&
+  //       this.form.controls.username.dirty &&
+  //       this.form.controls.username.invalid
+  //   );
+  // }
+
+  get passwordIsInvalid() {
+    return (
+        this.form.controls.password.touched &&
+        this.form.controls.password.dirty &&
+        this.form.controls.password.invalid
+    );
   }
 }
