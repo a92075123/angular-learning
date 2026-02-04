@@ -16,10 +16,11 @@
 import {Component, inject, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {Todo, TodoService} from '../../services/todo';
 import {TodoTable} from '../shared/todo-table/todo-table';
 import {TodoDialog} from '../shared/dialog/todo-dialog';
 import {MatDialog} from '@angular/material/dialog';
+import {TodoService} from '../../services/todo-service';
+import {Todo} from '../../interface/global';
 
 @Component({
   selector: 'app-todo-app',
@@ -48,14 +49,14 @@ export class TodoApp {
   //取得代辦事項資料
   getTodoList() {
     this.todoService.getAll().subscribe(result => {
-      this.todos.set(result);
+      this.todos.set(result.data);
     });
   }
 
   //搜尋代辦事項
   searchTodoGetOne(value: string) {
     this.todoService.getOne(value).subscribe(result => {
-      this.todos.set(result);
+      this.todos.set(result.data);
     });
   }
 

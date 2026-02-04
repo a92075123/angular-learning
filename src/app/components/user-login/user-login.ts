@@ -45,7 +45,7 @@ export class UserLogin implements OnInit {
   //發送
   onSubmit() {
     if (this.form.invalid) return;
-    // this.form.reset();
+    this.form.reset();
   }
 
   // get usernameIsInvalid() {

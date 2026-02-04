@@ -2,9 +2,10 @@ import {Component, inject, signal} from '@angular/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {FormsModule} from '@angular/forms';
-import {Todo, TodoService} from '../../../services/todo';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
+import {TodoService} from '../../../services/todo-service';
+import {Todo} from '../../../interface/global';
 
 // 定義傳入資料的型別
 interface DialogData {
