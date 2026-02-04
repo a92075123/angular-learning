@@ -1,9 +1,10 @@
-import {Component, effect, input, output, signal} from '@angular/core';
+import {Component, computed, effect, input, output, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MatTableModule} from '@angular/material/table';
 import {MatIconModule} from '@angular/material/icon';
 import {CdkDragDrop, DragDropModule, moveItemInArray} from '@angular/cdk/drag-drop';
-import {Todo} from '../../../services/todo';
+import {Todo} from '../../../interface/global';
+
 
 /**
  * 共用待辦事項表格元件
@@ -31,8 +32,17 @@ export class TodoTable {
   todos = input<Todo[]>([]);
   // 內部可修改的排序副本
   orderedTodos = signal<Todo[]>([]);
+
   // 資料順序是否有被改變
-  isShowButton: boolean = false;
+  isShowButton = computed(() => {
+    const current = this.orderedTodos();
+    const original = this.todos();
+
+    // 增加防錯判斷：如果長度不一致，通常也代表資料已變動
+    if (current.length !== original.length) return false;
+
+    return current.some((todo, index) => todo.id !== original[index].id);
+  });
 
   constructor() {
     effect(() => {
@@ -50,6 +60,7 @@ export class TodoTable {
     this.editRequest.emit(todo);
   }
 
+
   // 拖曳排序
   onChangeLocation(event: CdkDragDrop<Todo[]>): void {
     const data = [...this.orderedTodos()];
@@ -57,11 +68,8 @@ export class TodoTable {
     data.flatMap((item, index) => {
       item.sort_no = index + 1;
     });
-
     this.orderedTodos.set(data);
     // 比對排序後的資料與原始資料順序是否一致
-    const original = this.todos();
-    this.isShowButton = data.some((todo, index) => todo.id !== original[index].id);
   }
 
   // 儲存按鈕事件
