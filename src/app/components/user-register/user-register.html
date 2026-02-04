@@ -3,16 +3,21 @@
     <h2 class="register-title">會員註冊</h2>
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="register-form">
       <div class="form-group">
-        <label for="username">帳號</label>
-        <input type="text" id="username" placeholder="請輸入帳號" formControlName="username"/>
+        <label for="account">帳號</label>
+        <input type="text" id="account" placeholder="請輸入帳號" formControlName="account"/>
+        @if (accountIsInvalid) {
+          <span class="error">請輸入帳號</span>
+        }
       </div>
       <div class="form-group">
         <label for="email">電子郵件</label>
         <input type="email" id="email" placeholder="請輸入電子郵件" formControlName="email"/>
+        @if (emailIsInvalid) {
+          <span class="error">請輸入email</span>
+        }
         @if (form.get('email')?.errors?.['emailExists']) {
           <span class="error">{{ form.get('email')?.errors?.['emailExists'] }}</span>
         }
-
       </div>
       <!--      <div class="form-group">-->
       <!--        <label for="role">角色</label>-->
@@ -64,9 +69,12 @@
           <input type="checkbox" formControlName="agreeTerms"/>
           我同意服務條款與隱私政策
         </label>
+        @if (agreeTermsIsInvalid) {
+          <span class="error">請勾選同意條款</span>
+        }
       </div>
       <div class="form-actions">
-        <button type="submit" class="btn-register">註冊</button>
+        <button class="btn-register">註冊</button>
       </div>
       <div class="form-footer">
         <span>已經有帳號？</span>
@@ -82,6 +90,8 @@
           1.密碼至少要有6個字元
           <br>
           2.密碼裡必須要包含大小寫英文
+          <br>
+          3.密碼跟確認密碼要一致
         </span>
       }
     </form>

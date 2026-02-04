@@ -4,10 +4,12 @@ import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
-  Validators
+  Validators,
 } from '@angular/forms';
 import {catchError, map, of} from "rxjs";
-import {HttpClient} from "@angular/common/http";
+import {UserService} from '../../services/user-service';
+import {User} from '../../interface/global';
+import {Router} from '@angular/router';
 
 
 //自訂規則 檢查密碼與確認密碼是否一致
@@ -29,25 +31,24 @@ function equalValues(val1: string, val2: string) {
 })
 export class UserRegister {
 
-  private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/api/';
+  private router = inject(Router);
 
+  private userService = inject(UserService);
+
+  clickButtonStatus = false;
 
   //自訂規則 asyncValidators 請求到後端檢測是否有這筆mail
   emailIsUnique = (control: AbstractControl) => {
     const email = control.value;
     if (!email) return of(null);
-
-    return this.http.get<{ exists: boolean }>(this.apiUrl + `checkEmail?email=${email}`).pipe(
-        map(res => res.exists ?
-            {emailExists: '此 Email 已被使用'} : null),
+    return this.userService.checkEmail(email).pipe(
+        map(res => res.exists ? {emailExists: '此 Email 已被使用'} : null),
         catchError(() => of(null))
     );
   };
 
-
   form = new FormGroup({
-    username: new FormControl('', {
+    account: new FormControl('', {
       validators: [Validators.required]
     }),
     email: new FormControl('', {
@@ -82,26 +83,50 @@ export class UserRegister {
   });
 
   onSubmit() {
-
+    this.clickButtonStatus = true;
     if (this.form.invalid) return;
 
-    console.log(this.form);
-    console.log(this.form.value.email);
+    const data: User = {
+      email: this.form.controls.email.value!,
+      password: this.form.controls.passwords.controls.password.value!,
+      account: this.form.controls.account.value!
+    }
+
+    this.userService.create(data).subscribe({
+      error: (res) => {
+        alert(res.error.message)
+      },
+      complete: () => {
+        alert("註冊成功!!")
+        this.router.navigate(['/login']);
+      }
+    });
   }
 
+  get agreeTermsIsInvalid() {
+    if (!this.clickButtonStatus) return;
+    return (
+        this.form.controls.agreeTerms.invalid
+    );
+  }
+
+  get accountIsInvalid() {
+    if (!this.clickButtonStatus) return;
+    return (
+        this.form.controls.account.invalid
+    );
+  }
 
   get emailIsInvalid() {
+    if (!this.clickButtonStatus && this.form.controls.email != null) return;
     return (
-        this.form.controls.email.touched &&
-        this.form.controls.email.dirty &&
         this.form.controls.email.invalid
     );
   }
 
   get passwordIsInvalid() {
+    if (!this.clickButtonStatus) return;
     return (
-        this.form.controls.passwords.touched &&
-        this.form.controls.passwords.dirty &&
         this.form.controls.passwords.invalid
     );
   }
