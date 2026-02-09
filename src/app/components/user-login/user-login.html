@@ -3,12 +3,12 @@
     <h2 class="login-title">會員登入</h2>
     <form [formGroup]="form" class="login-form" (click)="onSubmit()">
       <div class="form-group">
-        <label for="username">帳號</label>
+        <label for="account">帳號</label>
         <input type="text"
-               id="username"
-               name="username"
+               id="account"
+               name="account"
                placeholder="請輸入帳號"
-               formControlName="username"/>
+               formControlName="account"/>
         <!--        @if (usernameIsInvalid) {-->
         <!--          <span class="error">帳號錯誤</span>-->
         <!--        }-->
@@ -22,7 +22,13 @@
                formControlName="password"/>
       </div>
       @if (passwordIsInvalid) {
-        <span class="error">密碼錯誤</span>
+        <span class="error">
+          密碼錯誤
+          <br>
+          密碼至少要6位數
+          <br>
+          密碼要包含英文大小寫
+        </span>
       }
       <div class="form-actions">
         <button class="btn-login">登入</button>

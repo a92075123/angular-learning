@@ -1,13 +1,16 @@
 import {Component, DestroyRef, inject, OnInit} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {debounceTime} from "rxjs";
+import {Router} from "@angular/router";
+import {UserService} from "../../services/user-service";
+import {User} from "../../interface/global";
 
 
 let initialEmailVal = '';
 const savedForm = window.localStorage.getItem('saved-login-form');
 if (savedForm) {
   const loadedForm = JSON.parse(savedForm);
-  initialEmailVal = loadedForm.username;
+  initialEmailVal = loadedForm.account;
 }
 
 @Component({
@@ -18,11 +21,16 @@ if (savedForm) {
 })
 export class UserLogin implements OnInit {
 
+  private router = inject(Router);
+
+  private userService = inject(UserService);
+
   //關閉subscribe
   private destroyRef = inject(DestroyRef);
 
+
   form = new FormGroup({
-    username: new FormControl(initialEmailVal, {
+    account: new FormControl(initialEmailVal, {
       validators: [Validators.required]
     }),
     password: new FormControl('', {
@@ -31,21 +39,37 @@ export class UserLogin implements OnInit {
   });
 
   ngOnInit(): void {
+
+    //設定表單的值一變動立即更新localStorage的saved-login-form
     const subscription = this.form.valueChanges
     .pipe(debounceTime(500))
     .subscribe({
       next: (value) => {
-        window.localStorage.setItem('saved-login-form', JSON.stringify({username: value.username}));
+        window.localStorage.setItem('saved-login-form', JSON.stringify({account: value.account}));
       }
     });
-    //設定好localStorage 並關閉訂閱
+    //元件消失後，取消訂閱
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
 
   //發送
   onSubmit() {
     if (this.form.invalid) return;
-    this.form.reset();
+    const userData: User = {
+      account: this.form.controls.account.value!,
+      password: this.form.controls.password.value!
+    }
+    this.userService.login(userData).subscribe({
+      complete: () => {
+        alert("登入成功");
+        this.userService.setLoggedIn(this.form.controls.account.value!);
+        this.router.navigate(['/todo']);
+      },
+      error: (res) => {
+        alert(res.error.message);
+        this.form.controls.password.reset();
+      }
+    });
   }
 
   // get usernameIsInvalid() {

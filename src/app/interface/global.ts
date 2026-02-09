@@ -10,7 +10,7 @@ export interface Todo {
 
 //使用者
 export interface User {
-  email: string,
+  email?: string,
   password: string,
   account: string
 }
@@ -20,4 +20,12 @@ export interface ApiResponse<T> {
   success: boolean;
   data: T;
   message?: string;
+}
+
+//導覽器超連結
+export interface NavItem {
+  label: string;
+  route: string;
+  exact: boolean;
+  action?: string;
 }

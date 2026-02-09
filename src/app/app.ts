@@ -7,9 +7,11 @@
  * 負責整體佈局和導航
  */
 
-import { Component } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import {Component, computed, inject} from '@angular/core';
+import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
+import {CommonModule} from '@angular/common';
+import {NavItem} from "./interface/global";
+import {UserService} from "./services/user-service";
 
 @Component({
   selector: 'app-root',
@@ -18,16 +20,32 @@ import { CommonModule } from '@angular/common';
   styleUrl: './app.css'
 })
 export class App {
+
+  private userService = inject(UserService);
+
   title = 'Angular 學習專案';
 
+  // 基礎導航項目（私有）
+  private baseNavItems: NavItem[] = [
+    {label: '首頁', route: '/', exact: true},
+    {label: '資料綁定', route: '/data-binding', exact: false},
+    {label: '指令', route: '/directives', exact: false},
+    {label: '代辦事項清單', route: '/todo', exact: false},
+    {label: '登入', route: '/login', exact: false},
+  ]
+
   // 導航項目
-  navItems = [
-    { label: '首頁', route: '/', exact: true },
-    { label: '資料綁定', route: '/data-binding', exact: false },
-    { label: '指令', route: '/directives', exact: false },
-    { label: '代辦事項清單', route: '/todo', exact: false },
-    { label: '登入', route: '/login', exact: false },
-  ];
+  navItems = computed(() => {
+    let loginStatus = this.userService.isLoggedIn();
+    //如果是登入狀態，登入 => 登出
+    if (loginStatus) {
+      return [
+        ...this.baseNavItems.slice(0, -1)!,
+        {label: '登出', route: '', exact: false, action: 'logout'}
+      ]
+    }
+    return this.baseNavItems;
+  })
 
   // 行動版選單開關
   isMenuOpen = false;
@@ -38,5 +56,11 @@ export class App {
 
   closeMenu(): void {
     this.isMenuOpen = false;
+  }
+
+  handleNavAction(action: string): void {
+    if (action === 'logout') {
+      this.userService.logout();
+    }
   }
 }
