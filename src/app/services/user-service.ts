@@ -1,6 +1,6 @@
 import {computed, inject, Injectable, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {User} from "../interface/global";
+import {ApiResponse, User} from "../interface/global";
 import {Router} from "@angular/router";
 
 
@@ -35,7 +35,7 @@ export class UserService {
 
   //登入帳號
   login(data: User) {
-    return this.http.post(this.apiUrl + 'login', data);
+    return this.http.post<ApiResponse<any>>(this.apiUrl + 'login', data);
   }
 
   //註冊帳號

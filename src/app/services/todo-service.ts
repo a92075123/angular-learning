@@ -21,6 +21,13 @@ export class TodoService {
 
   // 查詢全部
   getAll() {
+    // // 從 localStorage 拿到登入時存起來的 token
+    // const token = localStorage.getItem('user-token');
+    //
+    // // 建立 Headers，注意格式通常是 "Bearer " + token
+    // const headers = new HttpHeaders({
+    //   'Authorization': `Bearer ${token}`
+    // });
     return this.http.get<ApiResponse<Todo[]>>(this.apiUrl + "/getAll");
   }
 

@@ -60,15 +60,18 @@ export class UserLogin implements OnInit {
       password: this.form.controls.password.value!
     }
     this.userService.login(userData).subscribe({
+      next: (res) => {
+        window.localStorage.setItem("user-token", res.data.token);
+      },
+      error: (res) => {
+        alert(res.error.message);
+        this.form.controls.password.reset();
+      },
       complete: () => {
         alert("登入成功");
         this.userService.setLoggedIn(this.form.controls.account.value!);
         this.router.navigate(['/todo']);
       },
-      error: (res) => {
-        alert(res.error.message);
-        this.form.controls.password.reset();
-      }
     });
   }
 
