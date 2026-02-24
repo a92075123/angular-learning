@@ -51,6 +51,7 @@ export class UserService {
 
   //登出
   logout() {
+    this.http.post(this.apiUrl + 'logout', null).subscribe()
     window.localStorage.removeItem('auth-user');
     this._currentUser.set(null);
     this.router.navigate(['/login']);

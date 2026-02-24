@@ -23,14 +23,12 @@ export class App {
 
   private userService = inject(UserService);
 
-  title = 'Angular 學習專案';
+  title = '文章部落格';
 
   // 基礎導航項目（私有）
   private baseNavItems: NavItem[] = [
     {label: '首頁', route: '/', exact: true},
-    {label: '資料綁定', route: '/data-binding', exact: false},
-    {label: '指令', route: '/directives', exact: false},
-    {label: '代辦事項清單', route: '/todo', exact: false},
+    {label: '文章', route: '/articles', exact: false},
     {label: '登入', route: '/login', exact: false},
   ]
 
@@ -41,6 +39,7 @@ export class App {
     if (loginStatus) {
       return [
         ...this.baseNavItems.slice(0, -1)!,
+        {label: '代辦事項清單', route: '/todo', exact: false},
         {label: '登出', route: '', exact: false, action: 'logout'}
       ]
     }

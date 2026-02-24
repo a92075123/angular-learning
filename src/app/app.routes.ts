@@ -7,7 +7,7 @@
  * 每個路由對應一個 URL 路徑和要顯示的元件
  */
 
-import { Routes } from '@angular/router';
+import {Routes} from '@angular/router';
 
 // 使用延遲載入 (Lazy Loading) 來優化效能
 export const routes: Routes = [
@@ -15,32 +15,42 @@ export const routes: Routes = [
     path: '',
     pathMatch: 'full',
     loadComponent: () =>
-      import('./components/home/home').then(m => m.Home)
-  },
-  {
-    path: 'data-binding',
-    loadComponent: () =>
-      import('./components/data-binding-demo/data-binding-demo').then(m => m.DataBindingDemo)
-  },
-  {
-    path: 'directives',
-    loadComponent: () =>
-      import('./components/directives-demo/directives-demo').then(m => m.DirectivesDemo)
+        import('./components/home/home').then(m => m.Home)
   },
   {
     path: 'todo',
     loadComponent: () =>
-      import('./components/todo-app/todo-app').then(m => m.TodoApp)
+        import('./components/todo-app/todo-app').then(m => m.TodoApp)
+  },
+  {
+    path: 'articles',
+    loadComponent: () =>
+        import('./components/article-list/article-list').then(m => m.ArticleList)
+  },
+  {
+    path: 'articles/new',
+    loadComponent: () =>
+        import('./components/article-editor/article-editor').then(m => m.ArticleEditor)
+  },
+  {
+    path: 'articles/:id',
+    loadComponent: () =>
+        import('./components/article-detail/article-detail').then(m => m.ArticleDetail)
+  },
+  {
+    path: 'articles/:id/edit',
+    loadComponent: () =>
+        import('./components/article-editor/article-editor').then(m => m.ArticleEditor)
   },
   {
     path: 'login',
     loadComponent: () =>
-      import('./components/user-login/user-login').then(m => m.UserLogin)
+        import('./components/user-login/user-login').then(m => m.UserLogin)
   },
   {
     path: 'register',
     loadComponent: () =>
-      import('./components/user-register/user-register').then(m => m.UserRegister)
+        import('./components/user-register/user-register').then(m => m.UserRegister)
   },
   // 萬用路由 - 處理找不到的頁面
   {

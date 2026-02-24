@@ -1,0 +1,83 @@
+<div class="article-list-container">
+  <header class="list-header">
+    <h1>文章列表</h1>
+    @if (isLoggedIn()) {
+      <a routerLink="/articles/new" class="btn-new">新增文章</a>
+    }
+  </header>
+
+  <!-- 搜尋與篩選區塊 -->
+  <div class="filter-bar">
+    <mat-form-field appearance="outline" class="filter-search">
+      <mat-label>搜尋文章</mat-label>
+      <input matInput
+             [value]="searchKeyword()"
+             (input)="searchKeyword.set($any($event.target).value)"
+             placeholder="輸入文章標題...">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-select">
+      <mat-label>分類</mat-label>
+      <mat-select [value]="selectedCategory()"
+                  (selectionChange)="selectedCategory.set($event.value)">
+        <mat-option value="">全部分類</mat-option>
+        @for (cat of categories(); track cat) {
+          <mat-option [value]="cat">{{ cat }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-select">
+      <mat-label>可見性</mat-label>
+      <mat-select [value]="selectedVisibility()"
+                  (selectionChange)="selectedVisibility.set($event.value)">
+        <mat-option value="">全部</mat-option>
+        <mat-option value="PUBLIC">公開</mat-option>
+        <mat-option value="PRIVATE">私人</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    @if (searchKeyword() || selectedCategory() || selectedVisibility()) {
+      <button class="btn-clear" (click)="clearFilters()">清除篩選</button>
+    }
+  </div>
+
+  <!-- 篩選結果統計 -->
+  @if (searchKeyword() || selectedCategory() || selectedVisibility()) {
+    <div class="filter-result-info">
+      找到 <strong>{{ articles().length }}</strong> 篇文章
+    </div>
+  }
+
+  <div class="articles-grid">
+    @for (article of articles(); track article.id) {
+      <a [routerLink]="['/articles', article.id]" class="article-card">
+        <div class="card-header">
+          <div>
+            @if (article.category) {
+              <span class="category-tag">{{ article.category }}</span>
+            }
+            @if (article.visibility === 'PRIVATE') {
+              <span class="visibility-tag private">私人</span>
+            }
+          </div>
+          <span class="view-count">{{ article.view_count }} 次瀏覽</span>
+        </div>
+        <h2 class="card-title">{{ article.title }}</h2>
+        @if (article.summary) {
+          <p class="card-summary">{{ article.summary }}</p>
+        }
+        <div class="card-footer">
+          <span class="author">帳戶: {{ article.author }}</span>
+          <span class="date">{{ formatDate(article.created_at) }}</span>
+        </div>
+      </a>
+    } @empty {
+      <div class="empty-state">
+        <p>沒有符合條件的文章</p>
+      </div>
+    }
+  </div>
+
+</div>

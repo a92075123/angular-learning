@@ -1,6 +1,5 @@
 import {Component, DestroyRef, inject, OnInit} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {debounceTime} from "rxjs";
 import {Router} from "@angular/router";
 import {UserService} from "../../services/user-service";
 import {User} from "../../interface/global";
@@ -39,17 +38,16 @@ export class UserLogin implements OnInit {
   });
 
   ngOnInit(): void {
-
     //設定表單的值一變動立即更新localStorage的saved-login-form
-    const subscription = this.form.valueChanges
-    .pipe(debounceTime(500))
-    .subscribe({
-      next: (value) => {
-        window.localStorage.setItem('saved-login-form', JSON.stringify({account: value.account}));
-      }
-    });
-    //元件消失後，取消訂閱
-    this.destroyRef.onDestroy(() => subscription.unsubscribe());
+    // const subscription = this.form.valueChanges
+    // .pipe(debounceTime(500))
+    // .subscribe({
+    //   next: (value) => {
+    //     window.localStorage.setItem('saved-login-form', JSON.stringify({account: value.account}));
+    //   }
+    // });
+    // //元件消失後，取消訂閱
+    // this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
 
   //發送
@@ -69,6 +67,7 @@ export class UserLogin implements OnInit {
       },
       complete: () => {
         alert("登入成功");
+        window.localStorage.setItem('saved-login-form', JSON.stringify({account: this.form.controls.account.value}));
         this.userService.setLoggedIn(this.form.controls.account.value!);
         this.router.navigate(['/todo']);
       },

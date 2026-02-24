@@ -1,0 +1,75 @@
+<div class="editor-container">
+  <h1>{{ isEditMode ? '編輯文章' : '新增文章' }}</h1>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="title">標題 <span class="required">*</span></label>
+      <input
+          id="title"
+          type="text"
+          formControlName="title"
+          placeholder="輸入文章標題"
+          maxlength="200"
+      />
+      @if (form.get('title')?.invalid && form.get('title')?.touched) {
+        <span class="error">標題為必填欄位</span>
+      }
+    </div>
+
+    <div class="form-row">
+
+      <div class="form-group">
+        <label for="summary">摘要</label>
+        <input
+            id="summary"
+            type="text"
+            formControlName="summary"
+            placeholder="簡短描述文章內容"
+            maxlength="500"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="category">分類</label>
+        <select id="category" formControlName="category">
+          <option value="">請選擇分類</option>
+          <option value="技術">技術</option>
+          <option value="生活">生活</option>
+          <option value="筆記">筆記</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>是否公開</label>
+        <mat-button-toggle-group formControlName="visibility" aria-label="文章可見度">
+          <mat-button-toggle value="PUBLIC">公開</mat-button-toggle>
+          <mat-button-toggle value="PRIVATE">私人</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      
+    </div>
+
+    <div class="form-group">
+      <label for="content">內容（Markdown 格式） <span class="required">*</span></label>
+      <div class="editor-panel">
+        <div class="editor-left">
+          <textarea
+              id="content"
+              formControlName="content"
+              placeholder="輸入文章"
+          ></textarea>
+        </div>
+      </div>
+      @if (form.get('content')?.invalid && form.get('content')?.touched) {
+        <span class="error">內容為必填欄位</span>
+      }
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-submit" [disabled]="form.invalid">
+        {{ isEditMode ? '更新文章' : '發布文章' }}
+      </button>
+      <button type="button" class="btn-cancel" (click)="cancel()">取消</button>
+    </div>
+  </form>
+</div>
